@@ -73,16 +73,16 @@ Including an example of how to use your role (for instance, with variables passe
 ```yaml
     - hosts: servers
       roles:
-         - { 
-	         role: laxathom.libertempo
-	         libertempo_version: "1.10.0"
-	     }
-```  
+         - {
+            role: laxathom.libertempo
+            libertempo_version: "1.10.0"
+        }
+```
 
 Testing
 ---------
 * Host requirements
-	* docker engine. Make sure it's installed and running.
+    * docker engine. Make sure it's installed and running.
 
 Set up ansible env
 ```bash
