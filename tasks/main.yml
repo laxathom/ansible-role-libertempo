@@ -1,0 +1,143 @@
+---
+- name: Install the selinux python module
+  package: name={{ item }} state=present
+  with_items:
+    - libselinux-python
+    - libsemanage-python
+    - policycoreutils-python
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - libertempo
+    - libertempo-selinux
+
+- name: Create temp directory
+  file: path={{ libertempo_tmpdir }} state=directory
+  tags:
+    - libertempo
+    - libertempo-update
+
+- name: Create system group
+  group: >
+    name={{ libertempo_group }}
+    system=yes
+    state=present
+  tags:
+    - libertempo
+    - libertempo-account
+
+- name: Create system user
+  user: >
+    name={{ libertempo_user }}
+    comment="Libertempo system user"
+    group={{ libertempo_user }}
+    home={{ libertempo_homedir }}
+    system=yes
+    state=present
+  tags:
+    - libertempo
+    - libertempo-account
+
+- name: Create data directory
+  file:
+    path: "{{ libertempo_webroot }}"
+    state: directory
+    owner: "{{ libertempo_user }}"
+    group: "{{ libertempo_group }}"
+  tags:
+    - libertempo
+
+- name: Download app package
+  get_url:
+    url: "{{ libertempo_dl_url }}"
+    dest: "{{ libertempo_tmpdir }}/{{ libertempo_archive }}"
+  tags:
+    - libertempo
+    - libertempo-update
+
+- name: Install app package
+  unarchive:
+    src: "{{ libertempo_tmpdir }}/{{ libertempo_archive }}"
+    dest: "{{ libertempo_webroot }}"
+    remote_src: yes
+    extra_opts: "--strip-components=1"
+    owner: "{{ libertempo_user }}"
+    group: "{{ libertempo_group }}"
+  tags:
+    - libertempo
+    - libertempo-update
+
+- name: Enable env
+  command: mv "{{ libertempo_webroot }}"/cfg/env_new.php "{{ libertempo_webroot }}"/cfg/env.php
+
+- name: Deploy database config
+  template:
+    src: dbconnect.php.j2
+    dest: "{{ libertempo_webroot }}/cfg/dbconnect.php"
+    owner: "{{ libertempo_user }}"
+    group: "{{ libertempo_group }}"
+  tags:
+    - libertempo
+    - libertempo-db
+
+- name: Deploy SMTP config
+  template:
+    src: config_SMTP.php.j2
+    dest: "{{ libertempo_webroot }}/cfg/config_SMTP.php"
+    owner: "{{ libertempo_user }}"
+    group: "{{ libertempo_group }}"
+  tags:
+    - libertempo
+    - libertempo-smtp
+
+- name: Deploy php-fpm pool config
+  template:
+    src: fpm-app.conf.j2
+    dest: "{{ libertempo_php_fpm_pool }}"
+    owner: root
+    group: root
+    mode: 0644
+  when: libertempo_install_php
+  notify: Restart php-fpm
+  tags:
+    - libertempo
+    - libertempo-config
+
+- stat:
+    path: "{{ libertempo_sessiondir }}"
+  register: sessiondir
+  tags:
+    - libertempo
+    - libertempo-config
+
+- stat:
+    path: "{{ libertempo_cachedir }}"
+  register: cachedir
+  tags:
+    - libertempo
+    - libertempo-config
+
+- name: Create session directory
+  file:
+    path: "{{ libertempo_sessiondir }}"
+    state: directory
+    owner: "{{ libertempo_user }}"
+    group: "{{ libertempo_group }}"
+  when: sessiondir.stat.isdir is not defined
+  tags:
+    - libertempo
+    - libertempo-config
+
+- name: Create cache directory
+  file:
+    path: "{{ libertempo_cachedir }}"
+    state: directory
+    owner: "{{ libertempo_user }}"
+    group: "{{ libertempo_group }}"
+  when: cachedir.stat.isdir is not defined
+  tags:
+    - libertempo
+    - libertempo-config
+
+- name: Apply SElinux configuration
+  include: selinux.yml
+  when: ansible_os_family == 'RedHat'

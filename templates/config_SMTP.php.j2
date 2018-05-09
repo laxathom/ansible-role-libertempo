@@ -1,0 +1,15 @@
+<?php
+
+//Config SMTP
+defined( '_PHP_CONGES' ) or die( 'Restricted access' );
+
+$config_SMTP_host = "{{ libertempo_smtp_host }}";
+$config_SMTP_port = {{ libertempo_smtp_port }}25;
+$config_SMTP_sec  = "{{ libertempo_smtp_auth }}";
+$config_SMTP_user = "{{ libertempo_smtp_user }}";
+$config_SMTP_pwd = "{{ libertempo_smtp_pass }}";
+
+{% if libertempo_error_report %}
+if (!defined( 'ERROR_MAIL_REPORT' ))
+ define('ERROR_MAIL_REPORT',  '{{ libertempo_error_report_email }}');
+{% endif %}

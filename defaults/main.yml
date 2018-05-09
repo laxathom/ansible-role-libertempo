@@ -1,0 +1,55 @@
+---
+libertempo_appname: libertempo
+
+libertempo_install_php: True
+libertempo_install_dbserver: True
+libertempo_install_webserver: True
+
+libertempo_php_fpm_includedir: "/etc/php-fpm.d"
+libertempo_php_fpm_pool: "{{ libertempo_php_fpm_includedir }}/{{ libertempo_appname }}.conf"
+libertempo_php_fpm_user: "{{ libertempo_appname }}"
+libertempo_php_fpm_group: "{{ libertempo_appname }}"
+libertempo_php_fpm_owner: "{{ libertempo_appname }}"
+libertempo_php_fpm_group: "{{ libertempo_appname }}"
+libertempo_php_fpm_mode: 660
+libertempo_php_fpm_whitelist:
+    - 127.0.0.1
+
+libertempo_version: "1.10.0"
+libertempo_archive: "v{{ libertempo_version }}.tar.gz"
+libertempo_dl_url: "https://github.com/Libertempo/Libertempo-web/archive/{{ libertempo_archive }}"
+
+libertempo_pkgs_deps:
+    - php-curl
+    - php-gettext
+
+libertempo_db_pkgs_deps:
+    - php-mysql
+
+librtempo_id_pkgs_deps:
+    - php-ldap
+
+libertempo_user: "{{ libertempo_appname }}"
+libertempo_group: "{{ libertempo_appname }}"
+
+libertempo_tmpdir: "/var/tmp"
+libertempo_homedir: "/var/lib/{{ libertempo_user }}"
+libertempo_sessiondir: "{{ libertempo_homedir }}/.session"
+libertempo_cachedir: "{{ libertempo_homedir }}/.cache"
+libertempo_webroot: "/var/www/libertempo"
+
+libertempo_dbhost: localhost
+libertempo_dbuser: "{{ libertempo_user }}"
+libertempo_dbpass: "{{ libertempo_user }}"
+libertempo_dbname: "{{ libertempo_user }}"
+
+libertempo_smtp_host: "localhost"
+libertempo_smtp_port: 25
+libertempo_smtp_auth: ""
+libertempo_smtp_user: ""
+libertempo_smtp_pass: ""
+
+libertempo_error_report: False
+libertempo_error_report_email: root@localhost
+
+libertempo_php_fpm_listen: "{{ libertempo_homedir }}/fpm.sock"
