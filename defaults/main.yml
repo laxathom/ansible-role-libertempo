@@ -53,3 +53,20 @@ libertempo_error_report: False
 libertempo_error_report_email: root@localhost
 
 libertempo_php_fpm_listen: "{{ libertempo_homedir }}/fpm.sock"
+
+libertempo_enable_ldap: false
+libertempo_ldap_server: ldaps://domain.tld
+libertempo_ldap_protocol_version: 0
+libertempo_ldap_bupsvr: ''
+libertempo_basedn: dc=domain,dc=tld
+libertempo_ldap_user: ''
+libertempo_ldap_pass: ''
+libertempo_searchdn: ou=account,dc=domain,dc=tld
+libertempo_ldap_firstname: givenname
+libertempo_ldap_lastname: sn
+libertempo_ldap_mail: mail
+libertempo_ldap_login: uid
+libertempo_ldap_fullname: displayName
+libertempo_ldap_filtre: posixAccount
+libertempo_ldap_filrech: objectclass
+libertempo_ldap_filtre_complet: ''

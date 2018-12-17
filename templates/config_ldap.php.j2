@@ -1,0 +1,22 @@
+<?php
+
+defined( '_PHP_CONGES' ) or die( 'Restricted access' );
+
+$config_ldap_server = "{{ libertempo_ldap_server }}";
+$config_ldap_protocol_version = {{ libertempo_ldap_protocol_version }} ;   // 3 si version 3 , 0 sinon !
+$config_ldap_bupsvr = "{{ libertempo_ldap_bupsvr | default('') }}";
+$config_basedn      = "{{ libertempo_basedn }}";
+$config_ldap_user   = "{{ libertempo_ldap_user | default('') }}";
+$config_ldap_pass   = "{{ libertempo_ldap_pass |default('') }}";
+$config_searchdn    = "{{ libertempo_searchdn }}";
+
+$config_ldap_prenom = "{{ libertempo_ldap_firstname }}"; 
+$config_ldap_nom    = "{{ libertempo_ldap_lastname }}";
+$config_ldap_mail   = "{{ libertempo_ldap_mail }}";
+$config_ldap_login  = "{{ libertempo_ldap_login }}";
+$config_ldap_nomaff = "{{ libertempo_ldap_fullname }}";
+$config_ldap_filtre = "{{ libertempo_ldap_filtre }}";
+$config_ldap_filrech= "{{ libertempo_ldap_filrech }}";
+
+$config_ldap_filtre_complet = "{{ libertempo_ldap_filtre_complet | default('') }}";
+

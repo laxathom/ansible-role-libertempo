@@ -1,0 +1,11 @@
+- name: Install LDAP dependencies
+  yum:
+    name: php-ldap
+    state: installed
+    enablerepo: '{{ libertempo_deps_repo | default("") }}'
+  when: libertempo_enable_ldap
+  tags:
+    - libertempo
+    - libertempo-pkgs
+    - libertempo-ldap
+    - ldap

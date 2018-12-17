@@ -1,12 +1,15 @@
 ---
 - name: Install the selinux python module
-  package: name={{ item }} state=present
+  package:
+    name: '{{ item }}'
+    state: present
   with_items:
     - libselinux-python
     - libsemanage-python
   tags:
     - libertempo
     - libertempo-selinux
+    - selinux
 
 - name: "Set up context workdir"
   sefcontext:
@@ -15,6 +18,7 @@
   tags:
     - libertempo
     - libertempo-selinux
+    - selinux
 
 #- name: "Allow {{ web_user }} to use port 12201"
 #  seport:
@@ -36,9 +40,11 @@
   tags:
     - libertempo
     - libertempo-selinux
+    - selinux
 
 - name: Restore context on webroot
   command: "restorecon -R -v {{ libertempo_webroot }}"
   tags:
     - libertempo
     - libertempo-selinux
+    - selinux

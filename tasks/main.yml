@@ -1,14 +1,5 @@
 ---
-- name: Install the selinux python module
-  package: name={{ item }} state=present
-  with_items:
-    - libselinux-python
-    - libsemanage-python
-    - policycoreutils-python
-  when: ansible_os_family == 'RedHat'
-  tags:
-    - libertempo
-    - libertempo-selinux
+- import_tasks: '{{ ansible_os_family }}-setup.yml'
 
 - name: Create temp directory
   file: path={{ libertempo_tmpdir }} state=directory
@@ -17,22 +8,22 @@
     - libertempo-update
 
 - name: Create system group
-  group: >
-    name={{ libertempo_group }}
-    system=yes
-    state=present
+  group:
+    name: '{{ libertempo_group }}'
+    system: yes
+    state: present
   tags:
     - libertempo
     - libertempo-account
 
 - name: Create system user
-  user: >
-    name={{ libertempo_user }}
-    comment="Libertempo system user"
-    group={{ libertempo_user }}
-    home={{ libertempo_homedir }}
-    system=yes
-    state=present
+  user:
+    name: '{{ libertempo_user }}'
+    comment: Libertempo system user
+    group: '{{ libertempo_user }}'
+    home: '{{ libertempo_homedir }}'
+    system: yes
+    state: present
   tags:
     - libertempo
     - libertempo-account
@@ -89,6 +80,17 @@
     - libertempo
     - libertempo-smtp
 
+- name: Deploy LDAP config
+  template:
+    src: config_ldap.php.j2
+    dest: "{{ libertempo_webroot }}/cfg/config_ldap.php"
+    owner: "{{ libertempo_user }}"
+    group: "{{ libertempo_group }}"
+  when: libertempo_enable_ldap
+  tags:
+    - libertempo
+    - libertempo-ldap
+
 - name: Deploy php-fpm pool config
   template:
     src: fpm-app.conf.j2
@@ -138,6 +140,5 @@
     - libertempo
     - libertempo-config
 
-- name: Apply SElinux configuration
-  include: selinux.yml
+- import_tasks: selinux.yml
   when: ansible_os_family == 'RedHat'
